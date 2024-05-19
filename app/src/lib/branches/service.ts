@@ -147,8 +147,8 @@ function mergeBranchesAndPrs(
 
 	// deduplicate - don't show branches that point to the same SHA
 	// prioritize PRs, then remote branches, then local only
-	const deduped = contributions.filter((value, index, self) =>
-		self.findIndex(v => v.sha === value.sha) === index
+	const deduped = contributions.filter(
+		(value, index, self) => self.findIndex((v) => v.sha === value.sha) === index
 	);
 
 	// This should be everything considered a branch in one list

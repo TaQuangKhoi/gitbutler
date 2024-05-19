@@ -182,7 +182,7 @@
 							<span class="text-xs">🔒</span>
 						{/if}
 						{#if commit.changeId}
-							{commit.changeId.split('-')[0]}
+							{commit.changeId.split('-')[0]}:{commit.id.substring(0, 6)}
 						{:else}
 							{commit.id.substring(0, 6)}
 						{/if}
@@ -433,14 +433,13 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin-top: -14px;
+		margin: -14px;
 	}
 	.commit__id > code {
 		background-color: #eeeeee;
 		padding: 1px 12px;
 		color: #888888;
 		font-size: x-small;
-		border-radius: 0px 0px 6px 6px;
 		margin-bottom: -8px;
 	}
 

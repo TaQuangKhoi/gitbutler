@@ -41,6 +41,7 @@
 	let headerDiv = $state<HTMLDivElement>();
 	let sentinelDiv = $state<HTMLDivElement>();
 	let isStuck = $state(false);
+	let supportsAuxClick = $state(false);
 
 	onMount(() => {
 		if (!reserveSpaceOnStuck || !sentinelDiv) return;
@@ -63,12 +64,25 @@
 			observer.disconnect();
 		};
 	});
+
+	onMount(() => {
+		// Detect whether the browser supports the `auxclick` event.
+		// Prefer `auxclick` for middle-click handling; fall back to `mousedown` when absent.
+		try {
+			supportsAuxClick =
+				typeof window !== "undefined" &&
+				("onauxclick" in window || "onauxclick" in document.createElement("div"));
+		} catch (err) {
+			supportsAuxClick = false;
+		}
+	});
 </script>
 
 {#if sticky && reserveSpaceOnStuck}
 	<div bind:this={sentinelDiv} class="sticky-sentinel"></div>
 {/if}
 
+<!-- Middle-click: prefer `auxclick` when supported; fallback to `mousedown`. -->
 <div
 	role="presentation"
 	bind:this={headerDiv}
@@ -78,6 +92,18 @@
 	bind:clientHeight={headerHeight}
 	use:focusable
 	{ondblclick}
+	onauxclick={(e) => {
+		if (e.button === 1 && onclose) {
+			e.preventDefault();
+			onclose();
+		}
+	}}
+	onmousedown={(e) => {
+		if (e.button === 1 && onclose && !supportsAuxClick) {
+			e.preventDefault();
+			onclose();
+		}
+	}}
 	style:background={transparent ? "transparent" : undefined}
 >
 	<div class="drawer-header__title">

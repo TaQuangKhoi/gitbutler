@@ -78,6 +78,12 @@
 	bind:clientHeight={headerHeight}
 	use:focusable
 	{ondblclick}
+	onmousedown={(e) => {
+		if (e.button === 1 && onclose) {
+			e.preventDefault();
+			onclose();
+		}
+	}}
 	style:background={transparent ? "transparent" : undefined}
 >
 	<div class="drawer-header__title">
